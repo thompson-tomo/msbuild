@@ -20,6 +20,33 @@ namespace Microsoft.Build.BackEnd.SdkResolution
     {
 #if FEATURE_ASSEMBLYLOADCONTEXT
         private static readonly CoreClrAssemblyLoader s_loader = new CoreClrAssemblyLoader();
+#else
+        // TODO: Needs work (obviously).
+        private sealed class AssemblyResolveContext
+        {
+            private string _assemblyPath;
+            private string _assemblyDirectory;
+            private string _assemblyFileName;
+
+            public AssemblyResolveContext(string assemblyPath)
+            {
+                _assemblyPath = assemblyPath;
+            }
+
+            public Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+            {
+                _assemblyDirectory ??= Path.GetDirectoryName(_assemblyPath);
+                _assemblyFileName ??= Path.GetFileNameWithoutExtension(_assemblyPath);
+
+                AssemblyName name = new AssemblyName(args.Name);
+                string candidateFullPath = Path.Combine(_assemblyDirectory, name.Name + ".dll");
+                if (File.Exists(candidateFullPath))
+                {
+                    return Assembly.LoadFile(candidateFullPath);
+                }
+                return null;
+            }
+        }
 #endif
 
         private readonly string IncludeDefaultResolver = Environment.GetEnvironmentVariable("MSBUILDINCLUDEDEFAULTSDKRESOLVER");
@@ -226,7 +253,9 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         protected virtual Assembly LoadResolverAssembly(string resolverPath)
         {
 #if !FEATURE_ASSEMBLYLOADCONTEXT
-            return Assembly.LoadFrom(resolverPath);
+            AssemblyResolveContext context = new AssemblyResolveContext(resolverPath);
+            AppDomain.CurrentDomain.AssemblyResolve += context.AssemblyResolve;
+            return Assembly.LoadFile(resolverPath);
 #else
             return s_loader.LoadFromPath(resolverPath);
 #endif
