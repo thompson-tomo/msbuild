@@ -226,9 +226,8 @@ namespace Microsoft.Build.BackEnd.SdkResolution
         protected virtual Assembly LoadResolverAssembly(string resolverPath)
         {
 #if !FEATURE_ASSEMBLYLOADCONTEXT
-            // This will load the resolver assembly into the default load context if possible, and fall back
-            // to LoadFrom-style load otherwise. We very much prefer the default load context because it allows
-            // native images to be used by the CLR, improving startup perf.
+            // This will load the resolver assembly into the default load context if possible, and fall back to LoadFrom context.
+            // We very much prefer the default load context because it allows native images to be used by the CLR, improving startup perf.
             AssemblyName assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(resolverPath))
             {
                 CodeBase = resolverPath,
