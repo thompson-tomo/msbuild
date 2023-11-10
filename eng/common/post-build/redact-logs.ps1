@@ -1,5 +1,6 @@
 param(
   [Parameter(Mandatory=$true)][string] $InputPath,
+  [Parameter(Mandatory=$false)][string] $DotnetPath,
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$tokensToRedact
 )
 
@@ -8,8 +9,13 @@ try {
 
   $packageName = 'binlogtool'
 
-  $dotnetRoot = InitializeDotNetCli -install:$true
-  $dotnet = "$dotnetRoot\dotnet.exe"
+  $dotnet = $DotnetPath
+
+  if(!$dotnet) {
+    $dotnetRoot = InitializeDotNetCli -install:$true
+    $dotnet = "$dotnetRoot\dotnet.exe"
+  }
+  
   $toolList = & "$dotnet" tool list -g
 
   if ($toolList -like "*$packageName*") {
@@ -29,7 +35,7 @@ try {
     Write-Host "Installing Binlog redactor CLI..."
     Write-Host "'$dotnet' new tool-manifest"
     & "$dotnet" new tool-manifest
-    Write-Host "'$dotnet' tool install $packageName --prerelease --add-source '$packageFeed' -v $verbosity"
+    Write-Host "'$dotnet' tool install $packageName --add-source '$packageFeed' -v $verbosity"
     & "$dotnet" tool install $packageName --local --add-source "$packageFeed" -v $verbosity
   
 
