@@ -6,7 +6,7 @@ param(
 try {
   . $PSScriptRoot\post-build-utils.ps1
 
-  $packageName = 'MSBuild.BinlogRedactor.CLI'
+  $packageName = 'binlogtool'
 
   $dotnetRoot = InitializeDotNetCli -install:$true
   $dotnet = "$dotnetRoot\dotnet.exe"
@@ -30,7 +30,7 @@ try {
     Write-Host "'$dotnet' new tool-manifest"
     & "$dotnet" new tool-manifest
     Write-Host "'$dotnet' tool install $packageName --prerelease --add-source '$packageFeed' -v $verbosity"
-    & "$dotnet" tool install $packageName --local --prerelease --add-source "$packageFeed" -v $verbosity
+    & "$dotnet" tool install $packageName --local --add-source "$packageFeed" -v $verbosity
   
 
     $optionalParams = [System.Collections.ArrayList]::new()
@@ -43,12 +43,11 @@ try {
 	  }		  
 	  elseif($p)
 	  {
-        $optionalParams.Add("-p") | Out-Null
-	    $optionalParams.Add($p) | Out-Null
+        $optionalParams.Add("-p:" + $p) | Out-Null
 	  }
     }
 
-    & $dotnet redact-binlog -f -r -i $InputPath `
+    & $dotnet binlogtool redact --input:$InputPath --recurse --in-place `
 	  @optionalParams
 
     if ($LastExitCode -ne 0) {
