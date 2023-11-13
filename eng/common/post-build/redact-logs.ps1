@@ -43,18 +43,21 @@ try {
   
     Foreach ($p in $tokensToRedact)
     {
-	  if($p -match '^\$\(.*\)$')
-	  {
-		Write-Host ("Ignoring token {0} as it is probably unexpanded AzDO variable"  -f $p)
-	  }		  
-	  elseif($p)
-	  {
+      if($p -match '^\$\(.*\)$')
+      {
+        Write-Host ("Ignoring token {0} as it is probably unexpanded AzDO variable"  -f $p)
+      }
+      elseif($p)
+      {
         $optionalParams.Add("-p:" + $p) | Out-Null
-	  }
+      }
     }
+    
+    # Make sure we can run on higher runtime in CI
+    $Env:DOTNET_ROLL_FORWARD = "Major"
 
     & $dotnet binlogtool redact --input:$InputPath --recurse --in-place `
-	  @optionalParams
+      @optionalParams
 
     if ($LastExitCode -ne 0) {
       Write-Host "Problems using Redactor tool. But ingoring them now."
