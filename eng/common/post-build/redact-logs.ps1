@@ -1,5 +1,6 @@
+[CmdletBinding(PositionalBinding=$False)]
 param(
-  [Parameter(Mandatory=$true)][string] $InputPath,
+  [Parameter(Mandatory=$true, Position=0)][string] $InputPath,
   [Parameter(Mandatory=$false)][string] $DotnetPath,
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$tokensToRedact
 )
