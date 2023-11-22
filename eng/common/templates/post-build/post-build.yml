@@ -187,8 +187,7 @@ stages:
           parameters:
             StageLabel: 'Validation'
             JobLabel: 'Signing'
-          variables:
-            - template: common-variables.yml
+            BinlogToolVersion: $(BinlogToolVersion)
 
     - job:
       displayName: SourceLink Validation

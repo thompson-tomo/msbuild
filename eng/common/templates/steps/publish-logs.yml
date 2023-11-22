@@ -2,6 +2,7 @@ parameters:
   StageLabel: ''
   JobLabel: ''
   CustomSensitiveDataList: ''
+  BinlogToolVersion: '-'
 
 steps:
 - task: Powershell@2
@@ -19,7 +20,7 @@ steps:
   inputs:
     filePath: $(Build.SourcesDirectory)/eng/common/post-build/redact-logs.ps1
     # For now this needs to have explicit list of all sensitive data. Taken from eng/publishing/v3/publish.yml
-    arguments: -InputPath '$(Build.SourcesDirectory)/PostBuildLogs' -BinlogToolVersion $(BinlogToolVersion)
+    arguments: -InputPath '$(Build.SourcesDirectory)/PostBuildLogs' -BinlogToolVersion ${{parameters.BinlogToolVersion}}
       '$(publishing-dnceng-devdiv-code-r-build-re)'
       '$(MaestroAccessToken)'
       '$(dn-bot-all-orgs-artifact-feeds-rw)'
