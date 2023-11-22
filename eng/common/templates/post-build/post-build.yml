@@ -187,6 +187,8 @@ stages:
           parameters:
             StageLabel: 'Validation'
             JobLabel: 'Signing'
+          variables:
+            - template: common-variables.yml
 
     - job:
       displayName: SourceLink Validation
