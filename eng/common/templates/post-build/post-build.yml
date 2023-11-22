@@ -183,6 +183,16 @@ stages:
               /p:SignCheckExclusionsFile='$(Build.SourcesDirectory)/eng/SignCheckExclusionsFile.txt'
               ${{ parameters.signingValidationAdditionalParameters }}
 
+        - task: Powershell@2
+          displayName: Spit vars
+          inputs:
+            targetType: inline
+            script: |
+              Write-Host $(SourceLinkCLIVersion)
+              Write-Host $(BinlogToolVersion)
+          continueOnError: true
+          condition: always()
+
         - template: ../steps/publish-logs.yml
           parameters:
             StageLabel: 'Validation'
