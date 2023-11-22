@@ -14,19 +14,12 @@ steps:
   continueOnError: true
   condition: always()
 
-#- task: UseDotNet@2
-#  displayName: Use .NET Core SDK 6
-#  inputs:
-#    packageType: sdk
-#    version: 7.0.x
-#    installationPath: $(Agent.TempDirectory)/dotnet
-
 - task: PowerShell@2
   displayName: Redact Logs
   inputs:
     filePath: $(Build.SourcesDirectory)/eng/common/post-build/redact-logs.ps1
     # For now this needs to have explicit list of all sensitive data. Taken from eng/publishing/v3/publish.yml
-    arguments: -InputPath '$(Build.SourcesDirectory)/PostBuildLogs'
+    arguments: -InputPath '$(Build.SourcesDirectory)/PostBuildLogs' -BinlogToolVersion $(BinlogToolVersion)
       '$(publishing-dnceng-devdiv-code-r-build-re)'
       '$(MaestroAccessToken)'
       '$(dn-bot-all-orgs-artifact-feeds-rw)'
