@@ -145,6 +145,7 @@ jobs:
             -ArtifactsPublishingAdditionalParameters '${{ parameters.artifactsPublishingAdditionalParameters }}'
             -SymbolPublishingAdditionalParameters '${{ parameters.symbolPublishingAdditionalParameters }}'
 
+    - ${{ if eq(parameters.enablePublishBuildArtifacts, 'true') }}:
       - task: Powershell@2
         displayName: Spit vars
         inputs:
@@ -154,8 +155,7 @@ jobs:
             Write-Host $(BinlogToolVersion)
         continueOnError: true
         condition: always()
-
-    - ${{ if eq(parameters.enablePublishBuildArtifacts, 'true') }}:
+    
       - template: /eng/common/templates/steps/publish-logs.yml
         parameters:
           JobLabel: 'Publish_Artifacts_Logs'
