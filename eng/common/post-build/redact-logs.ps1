@@ -6,7 +6,7 @@ param(
   [Parameter(Mandatory=$false)][string] $PackageFeed = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json',
   # File with strings to redact - separated by newlines.
   #  For comments start the line with '# ' - such lines are ignored 
-  [Parameter(Mandatory=$false)][string] $TokensFilePath = '$(Build.SourcesDirectory)/eng/BinlogSecretsRedactionFile.txt',
+  [Parameter(Mandatory=$false)][string] $TokensFilePath,
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$TokensToRedact
 )
 
