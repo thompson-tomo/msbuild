@@ -158,4 +158,5 @@ jobs:
     - ${{ if eq(parameters.enablePublishBuildArtifacts, 'true') }}:
       - template: /eng/common/templates/steps/publish-logs.yml
         parameters:
-          JobLabel: 'Publish_Artifacts_Logs'     
+          JobLabel: 'Publish_Artifacts_Logs'
+          BinlogToolVersion: $(BinlogToolVersion)
