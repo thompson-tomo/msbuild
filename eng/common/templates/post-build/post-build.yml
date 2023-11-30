@@ -182,11 +182,12 @@ stages:
               /p:PackageBasePath='$(Build.ArtifactStagingDirectory)/PackageArtifacts'
               /p:SignCheckExclusionsFile='$(Build.SourcesDirectory)/eng/SignCheckExclusionsFile.txt'
               ${{ parameters.signingValidationAdditionalParameters }}
-
+              
         - template: ../steps/publish-logs.yml
           parameters:
             StageLabel: 'Validation'
             JobLabel: 'Signing'
+            BinlogToolVersion: $(BinlogToolVersion)
 
     - job:
       displayName: SourceLink Validation
