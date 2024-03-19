@@ -96,7 +96,7 @@ namespace Microsoft.Build.BackEnd.Logging
 
             // If we are only logging critical events lets not pass back the items or properties
             if (!LoggingService.OnlyLogCriticalEvents &&
-                LoggingService.IncludeEvaluationPropertiesAndItems &&
+                !LoggingService.IncludeEvaluationPropertiesAndItems &&
                 (!LoggingService.RunningOnRemoteNode || LoggingService.SerializeAllProperties))
             {
                 if (projectProperties is null)
