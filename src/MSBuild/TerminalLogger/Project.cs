@@ -22,10 +22,8 @@ internal sealed class Project
     /// Initialized a new <see cref="Project"/> with the given <paramref name="targetFramework"/>.
     /// </summary>
     /// <param name="targetFramework">The target framework of the project or null if not multi-targeting.</param>
-    public Project(string? targetFramework, StopwatchAbstraction? stopwatch)
+    public Project(StopwatchAbstraction? stopwatch)
     {
-        TargetFramework = targetFramework;
-
         if (stopwatch is not null)
         {
             stopwatch.Start();
@@ -53,19 +51,9 @@ internal sealed class Project
     public DirectoryInfo? SourceRoot { get; set; }
 
     /// <summary>
-    /// The target framework of the project or null if not multi-targeting.
-    /// </summary>
-    public string? TargetFramework { get; }
-
-    /// <summary>
     /// True when the project has run target with name "_TestRunStart" defined in <see cref="TerminalLogger._testStartTarget"/>.
     /// </summary>
     public bool IsTestProject { get; set; }
-
-    /// <summary>
-    /// This property is true when the project would prefer to have full paths in the logs and/or for processing tasks.
-    /// </summary>
-    public bool GenerateFullPaths { get; set; }
 
     /// <summary>
     /// A lazily initialized list of build messages/warnings/errors raised during the build.
