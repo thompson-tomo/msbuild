@@ -388,8 +388,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   
   <PropertyGroup Condition="'$(MSBuildCopyMarkerName)' == ''">
     <MSBuildCopyMarkerName>$(MSBuildProjectFile)</MSBuildCopyMarkerName>
-    <!-- For a long MSBuildProjectFile let's shorten this to 17 chars - using the first 8 chars of the filename and a filename hash. -->
-    <MSBuildCopyMarkerName Condition="'$(MSBuildCopyMarkerName.Length)' &gt; '17'">$(MSBuildProjectFile.Substring(0,8)).$([MSBuild]::StableStringHash($(MSBuildProjectFile)).ToString("X8"))</MSBuildCopyMarkerName>
+    <!-- For a long MSBuildProjectFile let's shorten this to 17 chars - using the first 8 codepoints of the filename and a filename hash. -->
+    <MSBuildCopyMarkerName Condition="'$(MSBuildCopyMarkerName.Length)' &gt; '17'">$([MSBuild]::SubstringByTextElements($(MSBuildProjectFile), 0, 8)).$([MSBuild]::StableStringHash($(MSBuildProjectFile)).ToString("X8"))</MSBuildCopyMarkerName>
     <MSBuildCopyMarkerName>$(MSBuildCopyMarkerName).Up2Date</MSBuildCopyMarkerName>
   </PropertyGroup>
 
@@ -1729,7 +1729,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <SetPlatform>Platform=%(ProjectsWithNearestPlatform.NearestPlatform)</SetPlatform>
       </ProjectsWithNearestPlatform>
 
-      <!-- When GetCompatiblePlatform fails to assign NearestPlatform, undefine Platform and let that project build "on its own" -->
+      <!-- When GetCompatiblePlatform fails to assign NearestPlatform (or determines it's identical to default for the referenced project), undefine Platform and let that project build "on its own" -->
       <ProjectsWithNearestPlatform Condition="'@(ProjectsWithNearestPlatform)' == '%(Identity)' and '%(ProjectsWithNearestPlatform.NearestPlatform)' == ''">
         <UndefineProperties>%(ProjectsWithNearestPlatform.UndefineProperties);Platform</UndefineProperties>
       </ProjectsWithNearestPlatform>
@@ -3800,6 +3800,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       <CoreCompileCache Include="@(ReferencePath)" />
       <CoreCompileCache Include="$(DefineConstants)" />
       <CoreCompileCache Include="$(LangVersion)" />
+      <CoreCompileCache Include="$(Deterministic)" />
+      <CoreCompileCache Include="$(PathMap)" />
     </ItemGroup>
 
     <Hash
